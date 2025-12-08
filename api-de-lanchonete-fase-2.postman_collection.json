@@ -1,0 +1,756 @@
+{
+	"info": {
+		"_postman_id": "1ee6cdd9-77e7-4efb-bfa5-3b3cd48594b3",
+		"name": "API de Lanchonete Fase 2",
+		"description": "Documentação da API de Lanchonete",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34994004"
+	},
+	"item": [
+		{
+			"name": "usuario",
+			"item": [
+				{
+					"name": "Identificar usuário",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/usuario?cpf=12345678901",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuario"
+							],
+							"query": [
+								{
+									"key": "cpf",
+									"value": "12345678901",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Busca cadastro de cliente já existente"
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar usuário",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"identificarUsuario\": true,\n  \"nome\": \"Maria\",\n  \"cpf\": \"12345678901\",\n  \"email\": \"teste@teste.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuario",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuario"
+							]
+						},
+						"description": "Cadastra um novo usuário ou identifica usuário com registro padrão"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "produtos",
+			"item": [
+				{
+					"name": "Cadastrar novo produto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"X-Burguer Bão Demais\",\n  \"descricao\": \"Pão, hambúrguer, queijo e molho especial\",\n  \"categoriaId\": 1,\n  \"preco\": 19.99,\n  \"tempopreparo\": \"00:15:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/produtos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"produtos"
+							]
+						},
+						"description": "Inclusão de novo produto no banco de dados"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar produto por codigo",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/produtos/buscar/produto/:codigoProduto",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"produtos",
+								"buscar",
+								"produto",
+								":codigoProduto"
+							],
+							"variable": [
+								{
+									"key": "codigoProduto",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Retorna um produto especifico cadastrado no codigo"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por categoria",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/produtos/buscar/categoria/:codigoCategoria",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"produtos",
+								"buscar",
+								"categoria",
+								":codigoCategoria"
+							],
+							"variable": [
+								{
+									"key": "codigoCategoria",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Retorna uma categoria especifica do codigo enviado"
+					},
+					"response": []
+				},
+				{
+					"name": "Busca lista de produtos do codigo de categoria",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/produtos/buscar/categoria/:codigoCategoria/produtos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"produtos",
+								"buscar",
+								"categoria",
+								":codigoCategoria",
+								"produtos"
+							],
+							"variable": [
+								{
+									"key": "codigoCategoria",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Retorna lista de produtos especificos do codigo categoria enviado"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar informações de produto",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"X-Burguer Bão\",\n  \"descricao\": \"Pão, hambúrguer, queijo e molho especial\",\n  \"categoriaId\": 1,\n  \"preco\": 19.99,\n  \"tempopreparo\": \"00:15:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/produtos/:codigo",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"produtos",
+								":codigo"
+							],
+							"variable": [
+								{
+									"key": "codigo",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Atualiza informações do produto cadastrado no banco de dados"
+					},
+					"response": []
+				},
+				{
+					"name": "Remover produto cadastrado",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/produtos/:codigo",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"produtos",
+								":codigo"
+							],
+							"variable": [
+								{
+									"key": "codigo",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Remover produto cadastrado do banco de dados"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "pedido",
+			"item": [
+				{
+					"name": "Criar pedido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"idUsuario\": 1,\n  \"itens\": [\n    {\n      \"produtoId\": 1,\n      \"quantidade\": 2\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pedido",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pedido"
+							]
+						},
+						"description": "Retorna um novo Pedido"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar pedido por codigo",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/pedido/buscar/:codigoPedido",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pedido",
+								"buscar",
+								":codigoPedido"
+							],
+							"variable": [
+								{
+									"key": "codigoPedido",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Retorna um pedido especifico cadastrado no codigo"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar pedidos por status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/pedido?status=EM_PREPARACAO",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pedido"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "EM_PREPARACAO",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Lista um pedido a partir de um dos status pré definidos"
+					},
+					"response": []
+				},
+				{
+					"name": "Lista pedidos de forma ordenada",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/pedido/listarPedidos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pedido",
+								"listarPedidos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alterar o status do pedido",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/pedido/status/:codigo?status=PRONTO",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pedido",
+								"status",
+								":codigo"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "PRONTO",
+									"description": "(Required) "
+								}
+							],
+							"variable": [
+								{
+									"key": "codigo",
+									"value": "3",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Altera o status de um pedido com base no código do pedido e status pré definidos"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove pedido da fila de preparo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/pedido/remover/fila/:codigoPedido",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pedido",
+								"remover",
+								"fila",
+								":codigoPedido"
+							],
+							"variable": [
+								{
+									"key": "codigoPedido",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Remove pedido da fila de preparo com base no código do pedido"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "pagamento",
+			"item": [
+				{
+					"name": "Gerar um Qr Code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"OrderId\": 1,\n  \"TotalAmount\": 31.8,\n  \"Itens\": [\n    {\n      \"Codigo\": 1,\n      \"quantidade\": 2,\n      \"Valor\": 15.9\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pagamento",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pagamento"
+							]
+						},
+						"description": "Retorna uma string do Qr Code"
+					},
+					"response": []
+				},
+				{
+					"name": "Efetivação Criação",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer TEST-2122392666603428-051419-0f3013237427ca66260e0281b19708c8-17679366",
+								"type": "text"
+							},
+							{
+								"key": "X-Idempotency-Key",
+								"value": "59e4ee53-d85c-49aa-9e6a-67314b9031e9",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"transaction_amount\": 31.9,\r\n  \"payment_method_id\": \"pix\",\r\n  \"description\": \"Compra de teste QR\",\r\n  \"external_reference\": \"1\",\r\n  \"installments\": 1,\r\n  \"payer\": {\r\n    \"first_name\": \"Teste\",\r\n    \"last_name\": \"User\",\r\n    \"email\": \"email@gmail.com\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.mercadopago.com/v1/payments",
+							"protocol": "https",
+							"host": [
+								"api",
+								"mercadopago",
+								"com"
+							],
+							"path": [
+								"v1",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirmar pagamento Mercado Pago",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"1340130147\",\n  \"live_mode\": false,\n  \"type\": \"payment\",\n  \"date_created\": \"2025-08-02T12:54:53Z\",\n  \"user_id\": 17679366,\n  \"api_version\": \"v1\",\n  \"action\": \"payment.created\",\n  \"data\": {\n    \"id\": \"1340130147\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/webhook/mercadopago/confirmapagamento",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"webhook",
+								"mercadopago",
+								"confirmapagamento"
+							]
+						},
+						"description": "Recebe a confirmação de pagamento recebido pelo mercado pago"
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar pagamento",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/pagamento?id=1340130143",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pagamento"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1340130143"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "entrega",
+			"item": [
+				{
+					"name": "Finalizar Pedido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pedidoId\": 1,\n  \"dataHoraSolicitacao\": \"2025-08-02T12:54:53Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/entregar",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"entregar"
+							]
+						},
+						"description": "Rota responsável por finalizar o pedido e retirar da fila"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health Checks",
+			"item": [
+				{
+					"name": "Liveness Probe",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"X-Burguer Bão Demais\",\n  \"descricao\": \"Pão, hambúrguer, queijo e molho especial\",\n  \"categoriaId\": 1,\n  \"preco\": 19.99,\n  \"tempopreparo\": \"00:15:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/actuator/health/liveness",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"health",
+								"liveness"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Readiness Probe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/health/readiness",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"health",
+								"readiness"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
