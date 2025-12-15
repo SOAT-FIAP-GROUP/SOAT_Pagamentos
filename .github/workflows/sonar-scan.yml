@@ -39,9 +39,4 @@ jobs:
             -Dsonar.organization=soat-fiap-group \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.exclusions="**/api.controller/**,**/config/**,**/dto/**,**/exception/**,**/adapter/**,**/AppConstants.java,**/*Application.java"
-
-      - name: SonarQube Quality Gate
-        uses: SonarSource/sonarqube-quality-gate-action@v1
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            -Dsonar.qualitygate.wait=true
