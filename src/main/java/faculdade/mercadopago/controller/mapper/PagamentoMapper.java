@@ -4,7 +4,6 @@ import faculdade.mercadopago.controller.mapper.dto.response.PagamentoStatusRespo
 import faculdade.mercadopago.controller.mapper.dto.response.QrCodeResponse;
 import faculdade.mercadopago.entity.pagamento.ConfirmacaoPagamentoRes;
 import faculdade.mercadopago.entity.pagamento.QrCodeRes;
-import org.springframework.http.ResponseEntity;
 
 public class PagamentoMapper {
     public static QrCodeResponse toResponse(QrCodeRes entity) {

@@ -1,9 +1,9 @@
 package faculdade.mercadopago.mocks;
 
-import faculdade.mercadopago.controller.mapper.PedidoMapper;
-import faculdade.mercadopago.controller.mapper.dto.request.*;
-import faculdade.mercadopago.controller.mapper.dto.response.*;
-import faculdade.mercadopago.entity.*;
+import faculdade.mercadopago.controller.mapper.dto.request.ConfirmacaoWebHookRequest;
+import faculdade.mercadopago.controller.mapper.dto.request.QrCodeRequest;
+import faculdade.mercadopago.controller.mapper.dto.response.PagamentoStatusResponse;
+import faculdade.mercadopago.entity.Pedido;
 import faculdade.mercadopago.entity.enums.StatusPedidoEnum;
 import faculdade.mercadopago.entity.pagamento.ConfirmacaoPagamentoRes;
 import faculdade.mercadopago.entity.pagamento.QrCodeRes;
@@ -32,11 +32,11 @@ public class MockGenerator {
         );
     }
 
-    public static PagamentoStatusResponse generatePagamentoStatusResponse(){
+    public static PagamentoStatusResponse generatePagamentoStatusResponse() {
         return new PagamentoStatusResponse(
-          "999",
-          123L,
-          "approved"
+                "999",
+                123L,
+                "approved"
         );
     }
 
@@ -107,5 +107,30 @@ public class MockGenerator {
                 null                        // transaction_details
         );
 
+    }
+
+    public static ConfirmacaoWebHookRequest generateConfirmacaoWebHookRequestMock() {
+        return new ConfirmacaoWebHookRequest(
+                "1",
+                true,
+                "payment",
+                "2025-01-01T10:00:00Z",
+                999L,
+                "v1",
+                "payment.updated",
+                new ConfirmacaoWebHookRequest.PaymentData("1")
+        );
+    }
+
+    public static Pedido generatePedido() {
+        return new Pedido(
+                999L,
+                "user-123",
+                StatusPedidoEnum.RECEBIDO,
+                new BigDecimal("89.90"),
+                LocalDateTime.of(2025, 1, 1, 12, 0),
+                Time.valueOf("00:30:00"),
+                List.of()
+        );
     }
 }

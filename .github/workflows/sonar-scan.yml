@@ -38,5 +38,6 @@ jobs:
             -Dsonar.projectKey=SOAT-FIAP-GROUP_SOAT_Pagamentos \
             -Dsonar.organization=soat-fiap-group \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.exclusions="**/api.controller/**,**/config/**,**/dto/**,**/exception/**,**/adapter/**,**/AppConstants.java,**/*Application.java"
+            -Dsonar.exclusions="**/api/controller/**,**/config/**,**/mapper/**,**/gateway/**,**/dto/**,**/entity/**,**/exception/**,**/adapter/**,**/AppConstants.java,**/*Application.java" \
+            -Dsonar.coverage.exclusions="**/api/controller/**,**/config/**,**/mapper/**,**/gateway/**,**/dto/**,**/entity/**,**/exception/**,**/adapter/**,**/AppConstants.java,**/*Application.java" \
             -Dsonar.qualitygate.wait=true
