@@ -9,7 +9,7 @@ import faculdade.mercadopago.entity.pagamento.QrCodeRes;
 import faculdade.mercadopago.gateway.IPagamentoGateway;
 import faculdade.mercadopago.usecase.IPagamentoUseCase;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -57,7 +57,14 @@ public class PagamentoUseCase implements IPagamentoUseCase {
     }
 
     private String urlPagamento(String id) {
-        return AppConstants.BASEURL_MERCADOPAGO + AppConstants.CONFIRMPAYMENT_MERCADOPAGO + "/" + id;
+
+        String baseUrl = AppConstants.BASEURL_MERCADOPAGO
+                + AppConstants.CONFIRMPAYMENT_MERCADOPAGO;
+
+        return UriComponentsBuilder.fromUriString(baseUrl)
+                .pathSegment(id)
+                .build()
+                .toUriString();
     }
 
     @Override

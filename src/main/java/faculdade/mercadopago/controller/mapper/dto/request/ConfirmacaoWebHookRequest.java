@@ -10,7 +10,7 @@ public record ConfirmacaoWebHookRequest(
         String action,
         ConfirmacaoWebHookRequest.PaymentData data
 ) {
-    record PaymentData(
+    public record PaymentData(
             String id
     ) {
     }
