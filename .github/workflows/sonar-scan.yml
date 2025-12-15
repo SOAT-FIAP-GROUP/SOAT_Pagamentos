@@ -30,7 +30,7 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Build and analyze
+      - name: Sonar Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -38,4 +38,10 @@ jobs:
             -Dsonar.projectKey=SOAT-FIAP-GROUP_SOAT_Pagamentos \
             -Dsonar.organization=soat-fiap-group \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.exclusions="**/*Entity.java,**/App*.java,**/*Gateway.java,**/*Request.java,**/*Res.java,**/DadosPedidoPago.java,**/*Config.java,**/*Mapper.java,**/*Response.java,**/*Handler.java,**/LanchoneteApplication.java,**/Pagamento.java"
+            -Dsonar.exclusions="**/api.controller/**,**/config/**,**/dto/**,**/exception/**,**/adapter/**,**/AppConstants.java,**/*Application.java"
+
+      - name: SonarQube Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

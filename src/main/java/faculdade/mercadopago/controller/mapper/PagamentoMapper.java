@@ -14,18 +14,11 @@ public class PagamentoMapper {
         );
     }
 
-    public static PagamentoStatusResponse toResponse(ResponseEntity<?> response) {
-        if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new RuntimeException("Erro ao consultar o pagamento ");
-        }
-        ConfirmacaoPagamentoRes body = (ConfirmacaoPagamentoRes) response.getBody();
-        if (body == null) {
-            throw new RuntimeException("Mercado Pago retornou uma resposta vazia");
-        }
+    public static PagamentoStatusResponse toResponse(ConfirmacaoPagamentoRes response) {
         return new PagamentoStatusResponse(
-                body.external_reference(),
-                body.id(),
-                body.status()
+                response.external_reference(),
+                response.id(),
+                response.status()
         );
     }
 }

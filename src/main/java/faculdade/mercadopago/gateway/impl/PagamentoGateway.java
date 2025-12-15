@@ -3,6 +3,7 @@ package faculdade.mercadopago.gateway.impl;
 import faculdade.mercadopago.AppConstants;
 import faculdade.mercadopago.controller.mapper.PedidoMapper;
 import faculdade.mercadopago.entity.Pedido;
+import faculdade.mercadopago.entity.pagamento.ConfirmacaoPagamentoRes;
 import faculdade.mercadopago.gateway.IPagamentoGateway;
 import faculdade.mercadopago.gateway.entity.PagamentoEntity;
 import faculdade.mercadopago.gateway.persistence.PagamentoRepository;
@@ -55,7 +56,15 @@ public class PagamentoGateway implements IPagamentoGateway {
 
     @Override
     public <R> ResponseEntity<?> sendRequest(String url, HttpMethod method, Class<R> responseType) {
-        return sendRequest(url, method, null, responseType, null);
+        var response = sendRequest(url, method, null, responseType, null);
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("Erro ao consultar o pagamento ");
+        }
+        ConfirmacaoPagamentoRes body = (ConfirmacaoPagamentoRes) response.getBody();
+        if (body == null) {
+            throw new RuntimeException("Mercado Pago retornou uma resposta vazia");
+        }
+        return response;
     }
 
     @Override
