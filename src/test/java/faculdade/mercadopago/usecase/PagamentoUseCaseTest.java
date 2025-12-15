@@ -3,6 +3,7 @@ package faculdade.mercadopago.usecase;
 import faculdade.mercadopago.AppConstants;
 import faculdade.mercadopago.controller.mapper.dto.request.QrCodeRequest;
 import faculdade.mercadopago.entity.Pedido;
+import faculdade.mercadopago.entity.pagamento.ConfirmacaoPagamentoRes;
 import faculdade.mercadopago.entity.pagamento.QrCodeOrder;
 import faculdade.mercadopago.entity.pagamento.QrCodeRes;
 import faculdade.mercadopago.gateway.IPagamentoGateway;
@@ -68,7 +69,6 @@ public class PagamentoUseCaseTest {
         assertEquals(BigDecimal.valueOf(20), item.total_amount());
     }
 
-
     @Test
     void deveChamarSalvarPagamento() {
         Pedido pedido = mock(Pedido.class);
@@ -78,4 +78,35 @@ public class PagamentoUseCaseTest {
 
         verify(gateway).save(pedido, valor);
     }
+
+    @Test
+    void deveConsultarPagamento() {
+        String pedidoId = "888";
+        String url = AppConstants.BASEURL_MERCADOPAGO
+                + AppConstants.CONFIRMPAYMENT_MERCADOPAGO + "/" + pedidoId;
+
+        ConfirmacaoPagamentoRes bodyMock = mock(ConfirmacaoPagamentoRes.class);
+
+        ResponseEntity<ConfirmacaoPagamentoRes> responseEntity =
+                ResponseEntity.ok(bodyMock);
+
+        doReturn(responseEntity)
+                .when(gateway)
+                .sendRequest(
+                        url,
+                        HttpMethod.GET,
+                        ConfirmacaoPagamentoRes.class);
+
+        ConfirmacaoPagamentoRes resultado =
+                pagamentoUseCase.consultarPagamento(pedidoId);
+
+        assertEquals(bodyMock, resultado);
+
+        verify(gateway).sendRequest(
+                url,
+                HttpMethod.GET,
+                ConfirmacaoPagamentoRes.class
+        );
+    }
+
 }

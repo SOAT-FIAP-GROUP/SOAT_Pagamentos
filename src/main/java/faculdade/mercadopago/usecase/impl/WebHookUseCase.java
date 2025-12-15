@@ -3,7 +3,6 @@ package faculdade.mercadopago.usecase.impl;
 import faculdade.mercadopago.controller.mapper.dto.request.ConfirmacaoWebHookRequest;
 import faculdade.mercadopago.entity.Pedido;
 import faculdade.mercadopago.entity.enums.StatusPedidoEnum;
-import faculdade.mercadopago.entity.pagamento.ConfirmacaoPagamentoRes;
 import faculdade.mercadopago.entity.pagamento.DadosPedidoPago;
 import faculdade.mercadopago.exception.EntityNotFoundException;
 import faculdade.mercadopago.gateway.IPagamentoGateway;
@@ -31,41 +30,24 @@ public class WebHookUseCase implements IWebHookUseCase {
     @Override
     public boolean confirmarPagamento(ConfirmacaoWebHookRequest request) {
         var response = pagamentoUseCase.consultarPagamento(request.id());
-        if (response.getStatusCode().is2xxSuccessful()) {
-
-            ConfirmacaoPagamentoRes body = (ConfirmacaoPagamentoRes) response.getBody();
-            System.out.println(body);
-            if (body == null) {
-                throw new RuntimeException("Mercado Pago retornou uma resposta vazia");
-            }
-
-            String status = body.status();
-            //status = "approved";
-            return status.equals(STATUS_APROVADO);
-        }
-        return false;
+        String status = response.status();
+        //status = "approved";
+        return status.equals(STATUS_APROVADO);
     }
+
 
     @Override
     public DadosPedidoPago retornarPedidoPago(ConfirmacaoWebHookRequest request) {
-        var response = pagamentoUseCase.consultarPagamento(request.id());
-        if (response.getStatusCode().is2xxSuccessful()) {
-            ConfirmacaoPagamentoRes body = (ConfirmacaoPagamentoRes) response.getBody();
-            if (body == null) {
-                throw new RuntimeException("Mercado Pago retornou uma resposta vazia");
-            }
-            String codigo = body.external_reference();
-            double valorPago = 0.0;
-            if (body.transaction_details() != null) {
-                valorPago = body.transaction_details().total_paid_amount();
-            }
-            return new DadosPedidoPago(
-                    codigo,
-                    valorPago
-            );
-        } else {
-            throw new RuntimeException("Erro ao consultar Pagamento");
+        var body = pagamentoUseCase.consultarPagamento(request.id());
+        String codigo = body.external_reference();
+        double valorPago = 0.0;
+        if (body.transaction_details() != null) {
+            valorPago = body.transaction_details().total_paid_amount();
         }
+        return new DadosPedidoPago(
+                codigo,
+                valorPago
+        );
     }
 
     @Override

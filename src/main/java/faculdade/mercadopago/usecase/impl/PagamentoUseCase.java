@@ -61,8 +61,8 @@ public class PagamentoUseCase implements IPagamentoUseCase {
     }
 
     @Override
-    public ResponseEntity<?> consultarPagamento(String id) {
+    public ConfirmacaoPagamentoRes consultarPagamento(String id) {
         var url = urlPagamento(id);
-        return gateway.sendRequest(url, HttpMethod.GET, ConfirmacaoPagamentoRes.class);
+        return (ConfirmacaoPagamentoRes) gateway.sendRequest(url, HttpMethod.GET, ConfirmacaoPagamentoRes.class).getBody();
     }
 }
