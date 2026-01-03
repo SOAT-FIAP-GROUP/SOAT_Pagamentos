@@ -52,7 +52,7 @@ public class PagamentoUseCase implements IPagamentoUseCase {
     }
 
     @Override
-    public void salvarPagamento(Pedido pedido, BigDecimal valor) {
+    public void salvarPagamento(Pedido pedido, Double valor) {
         gateway.save(pedido, valor);
     }
 

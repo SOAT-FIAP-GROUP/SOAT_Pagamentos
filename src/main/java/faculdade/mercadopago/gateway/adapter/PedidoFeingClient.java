@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @FeignClient(name = "PedidoFeingClient", url = "${services.pedido.url}")
 public interface PedidoFeingClient {
-    @GetMapping("/pedidos/{id}")
+    @GetMapping("/api/pedido/buscar/{id}")
     Optional<PedidoEntity> buscarPedido(@PathVariable Long id);
 
     @PutMapping("/pedidos/{id}/status")

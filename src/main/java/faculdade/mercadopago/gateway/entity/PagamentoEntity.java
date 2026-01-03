@@ -1,31 +1,32 @@
 package faculdade.mercadopago.gateway.entity;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Document(collection = "pagamentos")
+@DynamoDbBean
 public class PagamentoEntity {
 
-    @Id
-    private Long id;
+    private String id;
 
     @NonNull
-    private PedidoEntity pedidoId;
+    private String pedidoId;
 
     @NonNull
-    private BigDecimal valor;
+    private double valor;
 
     @NonNull
     private String status;
 
     @NonNull
-    private LocalDateTime dataPagamento;
+    private String dataPagamento;
+
+    @DynamoDbPartitionKey
+    public String getId() {
+        return id;
+    }
 }
