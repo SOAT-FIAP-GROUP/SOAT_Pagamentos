@@ -1,15 +1,25 @@
-# Tech Challenge - Fase 3
+# Tech Challenge - Fase 4
 
 ---
 
 ## Integrantes do grupo:
 
-- Iago Cavalcante Geraldo- RM 362832
 - Jose Augusto dos Santos- RM 361650
 - Nathalia Matielo Rodrigues- RM 363100
 - Rogerio Inacio Silva Junior- RM 364104
 - Vanessa Moreira Wendling - RM 362741
 
+---
+
+## 📦 Funcionalidades Entregues na Fase 4
+
+- Criação do microsserviço de pagamentos
+- Implementação do banco de dados NoSql DynamoDb para registro dos pagamentos
+- Comunicação com os demais serviços via chamada direta
+- Implementação de um caminho de teste com BDD
+- Cobertura de testes superior a 80% (Segue evidência abaixo)
+- Branches Main/Master protegidas
+- Deploy automatizado via CI/CD
 ---
 
 ## 💡 Solução Proposta
@@ -36,20 +46,6 @@ Foi desenvolvido um sistema de autoatendimento para fast food, que:
 
 
 ---
-
-## 📦 Funcionalidades Entregues na Fase 3
-
-- Implementação de API Gateway
-- Implementação de autenticação via Cognito
-- Implementação de infra com Kubernets com terraform
-- Criação de repositorio de infra com terraform para o banco de dados
-- Revisão e criação de documentação de modelagem de dados
-- Desenho de arquitetura de serviços AWS
-- Configuração de Git Actions para deploy integrado com a AWS
-
-
----
-
 
 ##  Arquitetura
 
@@ -91,11 +87,8 @@ Assista ao vídeo com demonstração do funcionamento da aplicação e da arquit
 - Java 17
 - Spring Boot
 - Kubernetes 
-- Amazon Cognito
-- API Gateway
+- DynamoDb
 - Mercado Pago (integração de pagamento via QRCode)
-- MariaDB (Banco de dados)
-- Amazon RDS
 - Terraform
 - Github Actions
 
@@ -106,24 +99,18 @@ Assista ao vídeo com demonstração do funcionamento da aplicação e da arquit
 1. Instale JDK 17 e Maven.
 2. Clone o repositório:
     ```bash
-    git clone https://github.com/JoseAugustoDosSantos/mercadopago-fiap-tc-fase-2.git
-    cd mercadopago-fiap-tc-fase-2
+    git clone https://github.com/SOAT-FIAP-GROUP/SOAT_Pagamentos.git
+    cd SOAT_Pagamentos
     ```
-3. Configure o banco de dados e as categorias (caso não existam) no MariaDB:
-    ```sql
-    INSERT INTO categorias (CODIGO, NOME) VALUES
-      (1, 'LANCHE'),
-      (2, 'ACOMPANHAMENTO'),
-      (3, 'BEBIDA'),
-      (4, 'SOBREMESA');
-    ```
+3. Crie o banco de dados DynamoDB via terraform
+   
 4. Execute a aplicação via Maven:
     ```bash
     mvn spring-boot:run
     ```
 5. Acesse a documentação Swagger:
     ```
-    http://localhost:8080/swagger-ui/index.html
+    http://localhost:8082/swagger-ui/index.html
     ```
 ## 🚀 Como Executar via Kubernetes
 1. Instalar Kubernetes com Minikube, ou
@@ -138,7 +125,7 @@ Assista ao vídeo com demonstração do funcionamento da aplicação e da arquit
     ```
     - **Se estiver usando Minikube:**
     ```bash
-    minikube service lanchonete-service
+    minikube service pagamento-service
     ```
 
    Esse comando deve abrir automaticamente uma aba no navegador com a URL.  
@@ -172,364 +159,6 @@ Assista ao vídeo com demonstração do funcionamento da aplicação e da arquit
 
 Para ter acesso aos Endpoints e exemplos faça o download da collection e importe na sua IDE de preferência:
 [Collection API](https://drive.google.com/uc?export=download&id=1xp52ZV3tcdlxPq5wG7C6tpEA4O6jXKvB)
-
-### 👤 Usuário
-
-
-#### 🔍 Buscar usuário por CPF
-
-**GET** `/usuario?cpf=12345678900`
-
-**Resposta:**
-```json
-{
-  "id": 1,
-  "nome": "Maria",
-  "cpf": "12345678901",
-  "email": "teste@teste.com"
-} 
-```
-
-
-#### ➕ Criar novo usuário
-
-**POST** `/usuario`
-
-**Body:**
-```json
-{
-  "identificar_usuario": true,
-  "nome": "Maria Oliveira",
-  "cpf": "98765432100",
-  "email": "mariaoliveira@gmail.com"
-}
-```
-
-**Resposta:**
-```json
-{
-  "id": 1,
-  "nome": "Maria",
-  "cpf": "12345678901",
-  "email": "teste@teste.com"
-}
-```
-
----
-
-### 📦 Produto
-
-#### ➕ Cadastrar novo produto
-
-**POST** `/api/produtos`
-
-**Body:**
-```json
-{
-  "nome": "Coca-Cola",
-  "descricao": "Refrigerante 350ml",
-  "categoriaId": 3,
-  "preco": 5.00,
-  "tempopreparo": "00:01:00"
-}
-```
-
-**Resposta:**
-```json
-{
-  "id": 9,
-  "nome": "X-Burguer Bão Demais",
-  "descricao": "Pão, hambúrguer, queijo e molho especial",
-  "categoria": {
-    "id": 1,
-    "nome": null
-  },
-  "preco": 19.99,
-  "tempopreparo": "00:15:00"
-}
-```
-
-
-#### 🔍 Buscar produto por código
-
-**GET** `/api/produtos/buscar/produto/1`
-
-**Resposta:**
-```json
-{
-  "id": 1,
-  "nome": "X-Burguer",
-  "descricao": "Pão, hambúrguer, queijo e molho especial",
-  "categoria": {
-    "id": 1,
-    "nome": "LANCHE"
-  },
-  "preco": 15.90,
-  "tempopreparo": "00:10:00"
-}
-```
-
-#### 🔍 Buscar produto por categoria
-
-**GET** `/api/produtos/buscar/categoria/:codigoCategoria`
-
-**Resposta:**
-```json
-{
-  "id": 1,
-  "nome": "LANCHE"
-}
-```
-
-#### 🔍 Buscar lista de produto por categoria
-
-**GET** `/api/produtos/buscar/categoria/:codigoCategoria/produtos`
-
-**Resposta:**
-```json
-[
-  {
-    "id": 1,
-    "nome": "X-Burguer",
-    "descricao": "Pão, hambúrguer, queijo e molho especial",
-    "categoria": {
-      "id": 1,
-      "nome": "LANCHE"
-    },
-    "preco": 15.90,
-    "tempopreparo": "00:10:00"
-  },
-  {
-    "id": 2,
-    "nome": "X-Salada",
-    "descricao": "Pão, hambúrguer, queijo, alface e tomate",
-    "categoria": {
-      "id": 1,
-      "nome": "LANCHE"
-    },
-    "preco": 16.90,
-    "tempopreparo": "00:12:00"
-  },
-  {
-    "id": 9,
-    "nome": "X-Burguer Bão Demais",
-    "descricao": "Pão, hambúrguer, queijo e molho especial",
-    "categoria": {
-      "id": 1,
-      "nome": "LANCHE"
-    },
-    "preco": 19.99,
-    "tempopreparo": "00:15:00"
-  },
-  {
-    "id": 10,
-    "nome": "X-Burguer Bão",
-    "descricao": "Pão, hambúrguer, queijo e molho especial",
-    "categoria": {
-      "id": 1,
-      "nome": "LANCHE"
-    },
-    "preco": 19.99,
-    "tempopreparo": "00:15:00"
-  }
-]
-```
-
-#### Atualizar informações produtos
-
-**PUT** `/api/produtos/:codigo`
-
-**Body:**
-```json
-{
-  "nome": "X-Burguer Bão",
-  "descricao": "Pão, hambúrguer, queijo e molho especial",
-  "categoriaId": 1,
-  "preco": 19.99,
-  "tempopreparo": "00:15:00"
-}
-```
-
-**Resposta:**
-```json
-{
-  "id": 10,
-  "nome": "X-Burguer Bão",
-  "descricao": "Pão, hambúrguer, queijo e molho especial",
-  "categoria": {
-    "id": 1,
-    "nome": null
-  },
-  "preco": 19.99,
-  "tempopreparo": "00:15:00"
-}
-```
-
-#### ❌ Remover pedido da fila de preparo
-
-**DELETE** `/api/produtos/:codigo`
-
-**Resposta:** `204 No Content`
-
-
----
-
-### 🧾 Pedido
-
-#### ➕ Cadastrar novo pedido
-
-**POST** `/api/pedido`
-
-**Body:**
-```json
-{
-  "idUsuario": 1,
-  "itens": [
-    {
-      "produtoId": 1,
-      "quantidade": 2
-    }
-  ]
-}
-```
-
-**Resposta:**
-```json
-{
-  "id": 2,
-  "idUsuario": 1,
-  "status": "RECEBIDO",
-  "valorTotal": 31.80,
-  "dataHoraSolicitacao": "2025-08-03T17:26:30.8292112",
-  "tempoTotalPreparo": "00:20:00",
-  "itens": [
-    {
-      "id": 2,
-      "pedidoId": 2,
-      "produtoId": 1,
-      "quantidade": 2,
-      "precoUnitario": 15.90,
-      "precoTotal": 31.80
-    }
-  ]
-}
-```
-
-#### 📄 Buscar pedidos por status
-
-**GET** `/api/pedido?status=RECEBIDO`
-
-**Resposta:**
-```json
-[
-  {
-    "id": 2,
-    "idUsuario": 1,
-    "status": "RECEBIDO",
-    "valorTotal": 31.80,
-    "dataHoraSolicitacao": "2025-08-03T17:26:30",
-    "tempoTotalPreparo": "00:20:00",
-    "itens": [
-      {
-        "id": 2,
-        "pedidoId": 2,
-        "produtoId": 1,
-        "quantidade": 2,
-        "precoUnitario": 15.90,
-        "precoTotal": 31.80
-      }
-    ]
-  }
-]
-```
-
-#### 📄 Buscar pedidos por codigo
-
-**GET** `/api/pedido/buscar/:codigoPedido`
-
-**Resposta:**
-```json
-{
-  "id": 1,
-  "idUsuario": 1,
-  "status": "EM_PREPARACAO",
-  "valorTotal": 31.80,
-  "dataHoraSolicitacao": "2025-08-03T17:10:53",
-  "tempoTotalPreparo": "00:20:00",
-  "itens": [
-    {
-      "id": 1,
-      "pedidoId": 1,
-      "produtoId": 1,
-      "quantidade": 2,
-      "precoUnitario": 15.90,
-      "precoTotal": 31.80
-    }
-  ]
-}
-```
-
-#### 🔄 Alterar status do pedido
-
-**PUT** `/api/pedido/status/:codigo?status=EM_PREPARACAO`
-
-**Resposta:**
-```json
-{
-  "id": 1,
-  "idUsuario": 1,
-  "status": "EM_PREPARACAO",
-  "valorTotal": 31.80,
-  "dataHoraSolicitacao": "2025-08-03T17:10:53",
-  "tempoTotalPreparo": "00:20:00",
-  "itens": [
-    {
-      "id": 1,
-      "pedidoId": 1,
-      "produtoId": 1,
-      "quantidade": 2,
-      "precoUnitario": 15.90,
-      "precoTotal": 31.80
-    }
-  ]
-}
-```
-
-#### 📄 Lista de pedidos ordenada
-
-**GET** `/api/pedido/listarPedidos`
-
-**Resposta:**
-```json
-[
-    {
-        "id": 3,
-        "idUsuario": 1,
-        "status": "PRONTO",
-        "valorTotal": 31.80,
-        "dataHoraSolicitacao": "2025-08-05T20:39:12",
-        "tempoTotalPreparo": "00:20:00",
-        "itens": [
-            {
-                "id": 3,
-                "pedidoId": 3,
-                "produtoId": 1,
-                "quantidade": 2,
-                "precoUnitario": 15.90,
-                "precoTotal": 31.80
-            }
-        ]
-    }
-]
-````
-
-#### ❌ Remover pedido da fila de preparo
-
-**DELETE** `/api/pedido/remover/fila/:codigoPedido`
-
-**Resposta:** `204 No Content`
-
----
 
 ### 💳 Pagamento
 
@@ -635,38 +264,6 @@ Para ter acesso aos Endpoints e exemplos faça o download da collection e import
   "status": "pending"
 }
 ```
-
-
----
-
-### 🛵 Entrega
-
-#### 🚚 Finalizar pedido
-
-**POST** `/entregar`
-
-**Body:**
-```json
-{
-  "pedidoId": 1,
-  "dataHoraSolicitacao": "2025-08-02T12:54:53Z"
-}
-```
-
-**Resposta:**
-```json
-{
-  "data": {
-    "codigo": 1,
-    "status": "FINALIZADO",
-    "dataHoraEntrega": "2025-06-03T04:33:39.72109629"
-  },
-  "errors": [],
-  "success": true
-}
-```
-
-
 ---
 
 

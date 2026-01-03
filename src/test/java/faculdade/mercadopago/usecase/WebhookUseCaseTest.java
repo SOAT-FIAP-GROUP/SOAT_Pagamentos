@@ -12,7 +12,6 @@ import faculdade.mercadopago.usecase.impl.WebHookUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -84,7 +83,7 @@ public class WebhookUseCaseTest {
                 MockGenerator.generatePedido();
 
         Long pedidoId = 999L;
-        BigDecimal valor = BigDecimal.valueOf(100.00);
+        Double valor = 100.00;
 
         WebHookUseCase spyUseCase = spy(webHookUseCase);
         doReturn(true)

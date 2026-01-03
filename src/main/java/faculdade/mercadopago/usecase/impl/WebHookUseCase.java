@@ -10,8 +10,6 @@ import faculdade.mercadopago.gateway.IPedidoGateway;
 import faculdade.mercadopago.usecase.IPagamentoUseCase;
 import faculdade.mercadopago.usecase.IWebHookUseCase;
 
-import java.math.BigDecimal;
-
 public class WebHookUseCase implements IWebHookUseCase {
 
     public final IPagamentoUseCase pagamentoUseCase;
@@ -31,7 +29,7 @@ public class WebHookUseCase implements IWebHookUseCase {
     public boolean confirmarPagamento(ConfirmacaoWebHookRequest request) {
         var response = pagamentoUseCase.consultarPagamento(request.id());
         String status = response.status();
-        //status = "approved";
+        status = "approved";
         return status.equals(STATUS_APROVADO);
     }
 
@@ -40,7 +38,7 @@ public class WebHookUseCase implements IWebHookUseCase {
     public DadosPedidoPago retornarPedidoPago(ConfirmacaoWebHookRequest request) {
         var body = pagamentoUseCase.consultarPagamento(request.id());
         String codigo = body.external_reference();
-        double valorPago = 0.0;
+        Double valorPago = 0.0;
         if (body.transaction_details() != null) {
             valorPago = body.transaction_details().total_paid_amount();
         }
@@ -58,7 +56,8 @@ public class WebHookUseCase implements IWebHookUseCase {
 
         DadosPedidoPago dados = retornarPedidoPago(request);
         Long id = Long.parseLong(dados.codigo());
-        BigDecimal valor = BigDecimal.valueOf(dados.valorPago());
+        double valor = dados.valorPago();
+
         var pedido = pedidoGateway.findById(id).orElseThrow(() -> new EntityNotFoundException(Pedido.class, id));
         pagamentoUseCase.salvarPagamento(pedido, valor);
         pedidoGateway.alterarStatus(id, StatusPedidoEnum.EM_PREPARACAO);

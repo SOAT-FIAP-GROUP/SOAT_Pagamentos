@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
@@ -17,18 +18,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatusCode()).body(Map.of(
                 "status", ex.getStatusCode().value(),
                 "erro", ex.getReason(),
-                "timestamp", LocalDateTime.now()
+                "timestamp", LocalDateTime.now().toString()
         ));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-                "status", 500,
-                "erro", "Erro interno inesperado",
-                "mensagem", ex.getMessage(),
-                "timestamp", LocalDateTime.now()
-        ));
+        ex.printStackTrace();
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", 500);
+        body.put("erro", "Erro interno inesperado");
+        body.put("mensagem", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -37,7 +40,7 @@ public class GlobalExceptionHandler {
                 "status", 404,
                 "erro", "Registro não encontrado.",
                 "mensagem", ex.getMessage(),
-                "timestamp", LocalDateTime.now()
+                "timestamp", LocalDateTime.now().toString()
         ));
     }
 
@@ -47,7 +50,7 @@ public class GlobalExceptionHandler {
                 "status", 400,
                 "erro", "Requisição não atende aos parâmetros necessários.",
                 "mensagem", ex.getMessage(),
-                "timestamp", LocalDateTime.now()
+                "timestamp", LocalDateTime.now().toString()
         ));
     }
 }

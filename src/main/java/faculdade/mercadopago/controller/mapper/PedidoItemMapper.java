@@ -2,7 +2,6 @@ package faculdade.mercadopago.controller.mapper;
 
 import faculdade.mercadopago.controller.mapper.dto.response.PedidoItemResponse;
 import faculdade.mercadopago.entity.PedidoItem;
-import faculdade.mercadopago.gateway.entity.PedidoEntity;
 import faculdade.mercadopago.gateway.entity.PedidoItemEntity;
 
 public class PedidoItemMapper {
@@ -12,6 +11,10 @@ public class PedidoItemMapper {
     }
 
     public static PedidoItemEntity toEntityPersistence(PedidoItem pedidoItem) {
-        return new PedidoItemEntity(pedidoItem.id(), new PedidoEntity(pedidoItem.pedidoId()), pedidoItem.produtoId(), pedidoItem.quantidade(), pedidoItem.precoUnitario(), pedidoItem.precoTotal());
+        return new PedidoItemEntity(pedidoItem.id(), pedidoItem.pedidoId(), pedidoItem.produtoId(), pedidoItem.quantidade(), pedidoItem.precoUnitario(), pedidoItem.precoTotal());
+    }
+
+    public static PedidoItem toModel(PedidoItemEntity pedidoItem) {
+        return new PedidoItem(pedidoItem.getId(), pedidoItem.getPedidoId(), pedidoItem.getProdutoId(), pedidoItem.getQuantidade(), pedidoItem.getPrecoUnitario(), pedidoItem.getPrecoTotal());
     }
 }

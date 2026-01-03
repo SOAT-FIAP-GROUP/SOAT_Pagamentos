@@ -5,7 +5,6 @@ import faculdade.mercadopago.gateway.entity.PagamentoEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 public interface IPagamentoGateway {
@@ -23,6 +22,6 @@ public interface IPagamentoGateway {
     );
 
 
-    PagamentoEntity save(Pedido pedido, BigDecimal valor);
+    PagamentoEntity save(Pedido pedido, Double valor);
 
 }

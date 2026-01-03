@@ -6,21 +6,21 @@ import faculdade.mercadopago.entity.Pedido;
 import faculdade.mercadopago.entity.pagamento.ConfirmacaoPagamentoRes;
 import faculdade.mercadopago.gateway.IPagamentoGateway;
 import faculdade.mercadopago.gateway.entity.PagamentoEntity;
-import faculdade.mercadopago.gateway.persistence.PagamentoRepository;
+import faculdade.mercadopago.gateway.persistence.IPagamentoRepository;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 public class PagamentoGateway implements IPagamentoGateway {
-    private final PagamentoRepository pagamentoRepository;
+    private final IPagamentoRepository IPagamentoRepository;
     private final RestTemplate _restTemplate;
 
-    public PagamentoGateway(PagamentoRepository pagamentoRepository, RestTemplate restTemplate) {
-        this.pagamentoRepository = pagamentoRepository;
+    public PagamentoGateway(IPagamentoRepository IPagamentoRepository, RestTemplate restTemplate) {
+        this.IPagamentoRepository = IPagamentoRepository;
         _restTemplate = restTemplate;
     }
 
@@ -68,16 +68,17 @@ public class PagamentoGateway implements IPagamentoGateway {
     }
 
     @Override
-    public PagamentoEntity save(Pedido pedido, BigDecimal valor) {
+    public PagamentoEntity save(Pedido pedido, Double valor) {
         var pedidoEntity = PedidoMapper.toEntityPersistence(pedido);
         String STATUS = "approved";
         var pagamento = new PagamentoEntity(
-                pedidoEntity,
+                UUID.randomUUID().toString(),
+                pedidoEntity.getId().toString(),
                 valor,
                 STATUS,
-                LocalDateTime.now()
+                LocalDateTime.now().toString()
         );
 
-        return pagamentoRepository.save(pagamento);
+        return IPagamentoRepository.save(pagamento);
     }
 }

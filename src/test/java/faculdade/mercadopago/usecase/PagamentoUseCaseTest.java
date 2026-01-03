@@ -72,7 +72,7 @@ public class PagamentoUseCaseTest {
     @Test
     void deveChamarSalvarPagamento() {
         Pedido pedido = mock(Pedido.class);
-        BigDecimal valor = BigDecimal.valueOf(100);
+        Double valor = 100.00;
 
         pagamentoUseCase.salvarPagamento(pedido, valor);
 
