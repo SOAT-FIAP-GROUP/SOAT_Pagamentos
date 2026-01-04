@@ -12,8 +12,8 @@ public interface PedidoFeingClient {
     @GetMapping("/api/pedido/buscar/{id}")
     Optional<PedidoEntity> buscarPedido(@PathVariable Long id);
 
-    @PutMapping("/pedidos/{id}/status")
-    void alterarStatus(@PathVariable Long id, @RequestBody StatusPedidoEnum statusPedidoEnum);
+    @PutMapping("/api/pedido/status/{codigo}")
+    void alterarStatus(@PathVariable Long codigo, @RequestParam StatusPedidoEnum status);
 
     @PostMapping("/pedidos/{id}/fila")
     void adicionarNaFila(@PathVariable Long id);
