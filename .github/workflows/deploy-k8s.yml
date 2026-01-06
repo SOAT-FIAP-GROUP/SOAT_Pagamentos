@@ -41,7 +41,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Update kubeconfig
-        run: aws eks update-kubeconfig --name pagamento-app-dev --region ${{ vars.AWS_REGION }}
+        run: aws eks update-kubeconfig --name lanchonete-app-dev --region ${{ vars.AWS_REGION }}
 
       - name: Apply Kubernetes manifests
         run: |
