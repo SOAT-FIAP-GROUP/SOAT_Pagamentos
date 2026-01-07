@@ -34,4 +34,4 @@ build/
 
 ### Properties Local ###
 application-local.properties
-k8s/deployment-local.yaml
+deployment-local.yaml
