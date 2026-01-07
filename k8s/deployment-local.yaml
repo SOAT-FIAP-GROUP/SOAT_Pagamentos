@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pagamento-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pagamento-app
+  template:
+    metadata:
+      labels:
+        app: pagamento-app
+    spec:
+      containers:
+      - name: pagamento-container
+        image: joseaugustodossantos/pagamento-app
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SERVICE_PEDIDO
+          valueFrom:
+            configMapKeyRef:
+              name: pagamento-config
+              key: services.pedido.url
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef:
+              name: pagamento-config
+              key: cloud.aws.region.static
+        - name: AWS_ACCESS_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: pagamento-config
+              key: cloud.aws.credentials.access-key
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: pagamento-config
+              key: cloud.aws.credentials.secret-key
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: pagamento-config
+              key: spring.profiles.active
+        resources:
+          requests:
+            cpu: "100m"
+            memory: 200Mi
+          limits:
+            cpu: "300m"
+            memory: 400Mi
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          initialDelaySeconds: 120
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 120
+          periodSeconds: 5

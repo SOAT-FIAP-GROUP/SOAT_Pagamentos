@@ -13,48 +13,38 @@ spec:
         app: pagamento-app
     spec:
       containers:
-      - name: pagamento-container
-        image: ${DOCKER_IMAGE}
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8080
-        env:
-        - name: SPRING_DATASOURCE_URL
-          valueFrom:
-            configMapKeyRef:
-              name: pagamento-config
-              key: spring.datasource.url
-        - name: SPRING_DATASOURCE_USERNAME
-          valueFrom:
-            configMapKeyRef:
-              name: pagamento-config
-              key: spring.datasource.username
-        - name: SPRING_PROFILES_ACTIVE
-          valueFrom:
-            configMapKeyRef:
-              name: pagamento-config
-              key: spring.profiles.active
-        - name: SPRING_DATASOURCE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: pagamento-secret
-              key: spring.datasource.password
-        resources:
-          requests:
-            cpu: "100m"
-            memory: 200Mi
-          limits:
-            cpu: "300m"
-            memory: 400Mi
-        livenessProbe:
-          httpGet:
-            path: /actuator/health/liveness
-            port: 8080
-          initialDelaySeconds: 120
-          periodSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /actuator/health/readiness
-            port: 8080
-          initialDelaySeconds: 120
-          periodSeconds: 5
+        - name: pagamento-container
+          image: joseaugustodossantos/pagamento-app
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SERVICE_PEDIDO
+              valueFrom:
+                configMapKeyRef:
+                  name: pagamento-config
+                  key: services.pedido.url
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: pagamento-config
+                  key: spring.profiles.active
+          resources:
+            requests:
+              cpu: "100m"
+              memory: 200Mi
+            limits:
+              cpu: "300m"
+              memory: 400Mi
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 5
