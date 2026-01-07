@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pagamento-config
+data:
+  spring.profiles.active: ${SPRING_ACTIVE_PROFILE}
+  services.pedido.url: ${SERVICE_PEDIDO:localhost:8081}
