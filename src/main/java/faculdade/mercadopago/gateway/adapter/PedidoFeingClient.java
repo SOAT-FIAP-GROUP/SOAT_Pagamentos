@@ -18,3 +18,4 @@ public interface PedidoFeingClient {
     @PostMapping("/pedidos/{id}/fila")
     void adicionarNaFila(@PathVariable Long id);
 }
+

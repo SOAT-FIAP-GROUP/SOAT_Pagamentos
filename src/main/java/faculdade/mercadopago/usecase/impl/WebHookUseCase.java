@@ -7,6 +7,7 @@ import faculdade.mercadopago.entity.pagamento.DadosPedidoPago;
 import faculdade.mercadopago.exception.EntityNotFoundException;
 import faculdade.mercadopago.gateway.IPagamentoGateway;
 import faculdade.mercadopago.gateway.IPedidoGateway;
+import faculdade.mercadopago.gateway.IProducaoGateway;
 import faculdade.mercadopago.usecase.IPagamentoUseCase;
 import faculdade.mercadopago.usecase.IWebHookUseCase;
 
@@ -15,14 +16,16 @@ public class WebHookUseCase implements IWebHookUseCase {
     public final IPagamentoUseCase pagamentoUseCase;
     public final IPagamentoGateway pagamentoGateway;
     public final IPedidoGateway pedidoGateway;
+    public final IProducaoGateway producaoGateway;
 
     private static final String STATUS_APROVADO = "approved";
 
 
-    public WebHookUseCase(IPagamentoUseCase pagamentoUseCase, IPagamentoGateway pagamentoGateway, IPedidoGateway pedidoGateway) {
+    public WebHookUseCase(IPagamentoUseCase pagamentoUseCase, IPagamentoGateway pagamentoGateway, IPedidoGateway pedidoGateway, IProducaoGateway producaoGateway) {
         this.pagamentoUseCase = pagamentoUseCase;
         this.pagamentoGateway = pagamentoGateway;
         this.pedidoGateway = pedidoGateway;
+        this.producaoGateway = producaoGateway;
     }
 
     @Override
@@ -61,6 +64,6 @@ public class WebHookUseCase implements IWebHookUseCase {
         var pedido = pedidoGateway.findById(id).orElseThrow(() -> new EntityNotFoundException(Pedido.class, id));
         pagamentoUseCase.salvarPagamento(pedido, valor);
         pedidoGateway.alterarStatus(id, StatusPedidoEnum.EM_PREPARACAO);
-        pedidoGateway.adicionarPedidoNaFila(id);
+        producaoGateway.adicionarPedidoNaFila(id);
     }
 }
