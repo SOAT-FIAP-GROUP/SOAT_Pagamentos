@@ -50,6 +50,7 @@ jobs:
         run: |
           export SPRING_ACTIVE_PROFILE="${{ steps.ssm.outputs.SPRING_ACTIVE_PROFILE }}"
           export SERVICE_PEDIDO="http://pedido-service.default.svc.cluster.local:8080"
+          export SERVICE_PRODUCAO="http://producao-service.default.svc.cluster.local:8080"
           envsubst < k8s/configmap.yaml > k8s/configmap_rendered.yaml
 
       - name: Update kubeconfig

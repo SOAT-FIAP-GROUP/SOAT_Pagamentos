@@ -24,6 +24,11 @@ spec:
                 configMapKeyRef:
                   name: pagamento-config
                   key: services.pedido.url
+            - name: SERVICE_PRODUCAO
+              valueFrom:
+                configMapKeyRef:
+                  name: pagamento-config
+                  key: services.producao.url
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
                 configMapKeyRef:

@@ -7,6 +7,7 @@ import faculdade.mercadopago.entity.pagamento.ConfirmacaoPagamentoRes;
 import faculdade.mercadopago.entity.pagamento.DadosPedidoPago;
 import faculdade.mercadopago.gateway.IPagamentoGateway;
 import faculdade.mercadopago.gateway.IPedidoGateway;
+import faculdade.mercadopago.gateway.IProducaoGateway;
 import faculdade.mercadopago.mocks.MockGenerator;
 import faculdade.mercadopago.usecase.impl.WebHookUseCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,13 +25,15 @@ public class WebhookUseCaseTest {
     private WebHookUseCase webHookUseCase;
     private IPagamentoUseCase pagamentoUseCase;
     private IPedidoGateway pedidoGateway;
+    private IProducaoGateway producaoGateway;
 
     @BeforeEach
     void setup() {
         gateway = mock(IPagamentoGateway.class);
         pagamentoUseCase = mock(IPagamentoUseCase.class);
         pedidoGateway = mock(IPedidoGateway.class);
-        webHookUseCase = new WebHookUseCase(pagamentoUseCase, gateway, pedidoGateway);
+        producaoGateway = mock(IProducaoGateway.class);
+        webHookUseCase = new WebHookUseCase(pagamentoUseCase, gateway, pedidoGateway, producaoGateway);
     }
 
     @Test
@@ -106,7 +109,7 @@ public class WebhookUseCaseTest {
         verify(pedidoGateway)
                 .alterarStatus(pedidoId, StatusPedidoEnum.EM_PREPARACAO);
 
-        verify(pedidoGateway)
+        verify(producaoGateway)
                 .adicionarPedidoNaFila(pedidoId);
 
     }

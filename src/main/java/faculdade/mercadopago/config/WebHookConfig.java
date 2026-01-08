@@ -4,6 +4,7 @@ import faculdade.mercadopago.api.controller.WebHookAPIController;
 import faculdade.mercadopago.controller.WebHookController;
 import faculdade.mercadopago.gateway.IPagamentoGateway;
 import faculdade.mercadopago.gateway.IPedidoGateway;
+import faculdade.mercadopago.gateway.IProducaoGateway;
 import faculdade.mercadopago.usecase.IPagamentoUseCase;
 import faculdade.mercadopago.usecase.IWebHookUseCase;
 import faculdade.mercadopago.usecase.impl.WebHookUseCase;
@@ -23,11 +24,12 @@ public class WebHookConfig {
     }
 
     @Bean
-    WebHookUseCase webHookUseCase(IPagamentoUseCase pagamentoUseCase, IPagamentoGateway pagamentoGateway, IPedidoGateway pedidoGateway) {
+    WebHookUseCase webHookUseCase(IPagamentoUseCase pagamentoUseCase, IPagamentoGateway pagamentoGateway, IPedidoGateway pedidoGateway, IProducaoGateway producaoGateway) {
         return new WebHookUseCase(
                 pagamentoUseCase,
                 pagamentoGateway,
-                pedidoGateway
+                pedidoGateway,
+                producaoGateway
         );
     }
 }

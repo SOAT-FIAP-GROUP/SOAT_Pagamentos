@@ -25,11 +25,4 @@ public class PedidoGateway implements IPedidoGateway {
     public void alterarStatus(Long id, StatusPedidoEnum status) {
         pedidoRepository.alterarStatus(id, status);
     }
-
-    @Override
-    public void adicionarPedidoNaFila(Long id) {
-        pedidoRepository.adicionarNaFila(id);
-    }
-
-
 }

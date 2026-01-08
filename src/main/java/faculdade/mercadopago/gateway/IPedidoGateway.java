@@ -9,6 +9,4 @@ public interface IPedidoGateway {
     Optional<Pedido> findById(Long id);
 
     void alterarStatus(Long id, StatusPedidoEnum status);
-
-    void adicionarPedidoNaFila(Long id);
 }
