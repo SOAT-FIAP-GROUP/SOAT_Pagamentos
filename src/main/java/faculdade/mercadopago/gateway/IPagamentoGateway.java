@@ -24,4 +24,5 @@ public interface IPagamentoGateway {
 
     PagamentoEntity save(Pedido pedido, Double valor);
 
+    void remove(String pedidoId);
 }

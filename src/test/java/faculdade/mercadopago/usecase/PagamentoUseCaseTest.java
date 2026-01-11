@@ -80,6 +80,16 @@ public class PagamentoUseCaseTest {
     }
 
     @Test
+    void deveChamarRemoverPagamento() {
+        Pedido pedido = mock(Pedido.class);
+        Double valor = 100.00;
+
+        pagamentoUseCase.removerPagamento(pedido);
+
+        verify(gateway).remove(pedido.id().toString());
+    }
+
+    @Test
     void deveConsultarPagamento() {
         String pedidoId = "888";
         String url = AppConstants.BASEURL_MERCADOPAGO

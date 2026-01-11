@@ -2,6 +2,7 @@ package faculdade.mercadopago.usecase.impl;
 
 import faculdade.mercadopago.controller.mapper.dto.request.ConfirmacaoWebHookRequest;
 import faculdade.mercadopago.entity.Pedido;
+import faculdade.mercadopago.entity.enums.SagaSteps;
 import faculdade.mercadopago.entity.enums.StatusPedidoEnum;
 import faculdade.mercadopago.entity.pagamento.DadosPedidoPago;
 import faculdade.mercadopago.exception.EntityNotFoundException;
@@ -10,6 +11,9 @@ import faculdade.mercadopago.gateway.IPedidoGateway;
 import faculdade.mercadopago.gateway.IProducaoGateway;
 import faculdade.mercadopago.usecase.IPagamentoUseCase;
 import faculdade.mercadopago.usecase.IWebHookUseCase;
+
+import static faculdade.mercadopago.entity.enums.SagaSteps.PAGAMENTO_SALVO;
+import static faculdade.mercadopago.entity.enums.SagaSteps.STATUS_ALTERADO;
 
 public class WebHookUseCase implements IWebHookUseCase {
 
@@ -32,7 +36,7 @@ public class WebHookUseCase implements IWebHookUseCase {
     public boolean confirmarPagamento(ConfirmacaoWebHookRequest request) {
         var response = pagamentoUseCase.consultarPagamento(request.id());
         String status = response.status();
-        status = "approved";
+        status = "approved"; //Força pagamento como aprovado devido a problemas externos do próprio app do mercadopago
         return status.equals(STATUS_APROVADO);
     }
 
@@ -62,8 +66,34 @@ public class WebHookUseCase implements IWebHookUseCase {
         double valor = dados.valorPago();
 
         var pedido = pedidoGateway.findById(id).orElseThrow(() -> new EntityNotFoundException(Pedido.class, id));
-        pagamentoUseCase.salvarPagamento(pedido, valor);
-        pedidoGateway.alterarStatus(id, StatusPedidoEnum.EM_PREPARACAO);
-        producaoGateway.adicionarPedidoNaFila(id);
+        orquestrarPagamentoSaga(pedido, valor, id);
+    }
+
+    @Override
+    public void orquestrarPagamentoSaga(Pedido pedido, double valor, Long id) {
+        SagaSteps stepAtual = null;
+        try {
+            pagamentoUseCase.salvarPagamento(pedido, valor);
+            stepAtual = PAGAMENTO_SALVO;
+
+            pedidoGateway.alterarStatus(id, StatusPedidoEnum.EM_PREPARACAO);
+            stepAtual = STATUS_ALTERADO;
+
+            producaoGateway.adicionarPedidoNaFila(id);
+        } catch (Exception e) {
+            reverterTransacao(stepAtual, pedido, id);
+        }
+    }
+
+    public void reverterTransacao(SagaSteps step, Pedido pedido, Long id) {
+        if (step == null) return;
+
+        switch (step) {
+            case STATUS_ALTERADO -> {
+                pedidoGateway.alterarStatus(id, StatusPedidoEnum.RECEBIDO);
+                pagamentoUseCase.removerPagamento(pedido);
+            }
+            case PAGAMENTO_SALVO -> pagamentoUseCase.removerPagamento(pedido);
+        }
     }
 }
