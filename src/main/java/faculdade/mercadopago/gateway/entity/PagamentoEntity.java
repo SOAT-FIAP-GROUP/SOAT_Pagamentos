@@ -26,7 +26,7 @@ public class PagamentoEntity {
     private String dataPagamento;
 
     @DynamoDbPartitionKey
-    public String getId() {
-        return id;
+    public String getPedidoId() {
+        return pedidoId;
     }
 }

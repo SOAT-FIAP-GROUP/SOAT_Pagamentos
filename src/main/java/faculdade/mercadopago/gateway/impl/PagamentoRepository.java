@@ -1,12 +1,11 @@
 package faculdade.mercadopago.gateway.impl;
 
 import faculdade.mercadopago.gateway.entity.PagamentoEntity;
+import faculdade.mercadopago.gateway.entity.PedidoEntity;
 import faculdade.mercadopago.gateway.persistence.IPagamentoRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.*;
 
 @Repository
 public class PagamentoRepository implements IPagamentoRepository {
@@ -24,7 +23,20 @@ public class PagamentoRepository implements IPagamentoRepository {
 
     @Override
     public PagamentoEntity save(PagamentoEntity pagamento) {
-        pagamentoTable.putItem(pagamento);
+        pagamentoTable.putItem(r -> r
+                .item(pagamento)
+                .conditionExpression(
+                        Expression.builder()
+                                .expression("attribute_not_exists(pedidoId)")
+                                .build()));
         return pagamento;
+    }
+
+    @Override
+    public void remove(String pedido) {
+        pagamentoTable.deleteItem(Key.builder().
+                partitionValue(pedido
+                ).build()
+        );
     }
 }

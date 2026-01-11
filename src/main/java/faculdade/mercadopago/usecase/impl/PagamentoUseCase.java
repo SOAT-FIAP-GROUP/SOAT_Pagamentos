@@ -72,4 +72,9 @@ public class PagamentoUseCase implements IPagamentoUseCase {
         var url = urlPagamento(id);
         return (ConfirmacaoPagamentoRes) gateway.sendRequest(url, HttpMethod.GET, ConfirmacaoPagamentoRes.class).getBody();
     }
+
+    @Override
+    public void removerPagamento(Pedido pedido) {
+        gateway.remove(pedido.id().toString());
+    }
 }

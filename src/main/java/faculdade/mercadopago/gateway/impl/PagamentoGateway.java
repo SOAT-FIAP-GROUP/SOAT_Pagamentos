@@ -81,4 +81,9 @@ public class PagamentoGateway implements IPagamentoGateway {
 
         return IPagamentoRepository.save(pagamento);
     }
+
+    @Override
+    public void remove(String pedidoId) {
+        IPagamentoRepository.remove(pedidoId);
+    }
 }

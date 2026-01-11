@@ -3,6 +3,7 @@ package faculdade.mercadopago.usecase;
 import faculdade.mercadopago.controller.mapper.dto.request.QrCodeRequest;
 import faculdade.mercadopago.entity.Pedido;
 import faculdade.mercadopago.entity.pagamento.ConfirmacaoPagamentoRes;
+import faculdade.mercadopago.entity.pagamento.Pagamento;
 import faculdade.mercadopago.entity.pagamento.QrCodeRes;
 
 public interface IPagamentoUseCase {
@@ -10,6 +11,7 @@ public interface IPagamentoUseCase {
 
     void salvarPagamento(Pedido pedido, Double valor);
 
-
     ConfirmacaoPagamentoRes consultarPagamento(String id);
+
+    void removerPagamento(Pedido pedido);
 }

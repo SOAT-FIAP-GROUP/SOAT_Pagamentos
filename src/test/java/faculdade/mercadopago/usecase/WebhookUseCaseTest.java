@@ -2,6 +2,7 @@ package faculdade.mercadopago.usecase;
 
 import faculdade.mercadopago.controller.mapper.dto.request.ConfirmacaoWebHookRequest;
 import faculdade.mercadopago.entity.Pedido;
+import faculdade.mercadopago.entity.enums.SagaSteps;
 import faculdade.mercadopago.entity.enums.StatusPedidoEnum;
 import faculdade.mercadopago.entity.pagamento.ConfirmacaoPagamentoRes;
 import faculdade.mercadopago.entity.pagamento.DadosPedidoPago;
@@ -114,5 +115,74 @@ public class WebhookUseCaseTest {
 
     }
 
+    @Test
+    void deveOrquestrarPagamentoComSucesso() {
+        Pedido pedido =
+                MockGenerator.generatePedido();
 
+        Double valor = 100.00;
+
+        when(pedidoGateway.findById(pedido.id()))
+                .thenReturn(Optional.of(pedido));
+
+        webHookUseCase.orquestrarPagamentoSaga(pedido, valor, pedido.id());
+
+        // assert
+        verify(pagamentoUseCase)
+                .salvarPagamento(pedido, valor);
+
+        verify(pedidoGateway)
+                .alterarStatus(pedido.id(), StatusPedidoEnum.EM_PREPARACAO);
+
+        verify(producaoGateway)
+                .adicionarPedidoNaFila(pedido.id());
+    }
+
+    @Test
+    void deveReverterTransacaoPagamentoSalvoComSucesso() {
+        Pedido pedido = MockGenerator.generatePedido();
+        Double valor = 100.00;
+
+        WebHookUseCase spyUseCase = spy(webHookUseCase);
+
+        when(pedidoGateway.findById(pedido.id()))
+                .thenReturn(Optional.of(pedido));
+
+        doThrow(new RuntimeException("Erro ao alterar status"))
+                .when(pedidoGateway)
+                .alterarStatus(pedido.id(), StatusPedidoEnum.EM_PREPARACAO);
+
+        spyUseCase.orquestrarPagamentoSaga(pedido, valor, pedido.id());
+
+        verify(spyUseCase)
+                .reverterTransacao(
+                        SagaSteps.PAGAMENTO_SALVO,
+                        pedido,
+                        pedido.id()
+                );
+    }
+
+    @Test
+    void deveReverterTransacaoStatusAlteradoComSucesso() {
+        Pedido pedido = MockGenerator.generatePedido();
+        Double valor = 100.00;
+
+        WebHookUseCase spyUseCase = spy(webHookUseCase);
+
+        when(pedidoGateway.findById(pedido.id()))
+                .thenReturn(Optional.of(pedido));
+
+        doThrow(new RuntimeException("Erro ao alterar status"))
+                .when(producaoGateway)
+                .adicionarPedidoNaFila(pedido.id());
+
+        spyUseCase.orquestrarPagamentoSaga(pedido, valor, pedido.id());
+
+        verify(spyUseCase)
+                .reverterTransacao(
+                        SagaSteps.STATUS_ALTERADO,
+                        pedido,
+                        pedido.id()
+                );
+    }
 }
