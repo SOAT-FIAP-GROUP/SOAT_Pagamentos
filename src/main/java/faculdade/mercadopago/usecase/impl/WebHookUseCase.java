@@ -66,7 +66,6 @@ public class WebHookUseCase implements IWebHookUseCase {
         double valor = dados.valorPago();
 
         var pedido = pedidoGateway.findById(id).orElseThrow(() -> new EntityNotFoundException(Pedido.class, id));
-        System.out.println("Encntrou o pedido");
         orquestrarPagamentoSaga(pedido, valor, id);
     }
 
@@ -76,15 +75,11 @@ public class WebHookUseCase implements IWebHookUseCase {
         try {
             pagamentoUseCase.salvarPagamento(pedido, valor);
             stepAtual = PAGAMENTO_SALVO;
-            System.out.println("Salvou pagamento");
 
             pedidoGateway.alterarStatus(id, StatusPedidoEnum.EM_PREPARACAO);
             stepAtual = STATUS_ALTERADO;
-            System.out.println("Alterou o status");
-
 
             producaoGateway.adicionarPedidoNaFila(id);
-            System.out.println("Adicionou na fila");
         } catch (Exception e) {
             reverterTransacao(stepAtual, pedido, id);
         }
@@ -97,12 +92,9 @@ public class WebHookUseCase implements IWebHookUseCase {
             case STATUS_ALTERADO -> {
                 pedidoGateway.alterarStatus(id, StatusPedidoEnum.RECEBIDO);
                 pagamentoUseCase.removerPagamento(pedido);
-                System.out.println("reverteu STATUS_ALTERADO");
             }
-            case PAGAMENTO_SALVO -> {
-                pagamentoUseCase.removerPagamento(pedido);
-                System.out.println("reverteu PAGAMENTO_SALVO");
-            }
+            case PAGAMENTO_SALVO -> pagamentoUseCase.removerPagamento(pedido);
+
         }
     }
 }
