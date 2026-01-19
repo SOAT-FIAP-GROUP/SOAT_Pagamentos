@@ -11,6 +11,12 @@
 
 ---
 
+## 📦 Evidência da cobertura de testes SonarCloud
+
+![pagamento-evidencia-sonar.png](pagamento-evidencia-sonar.png)
+
+---
+
 ## 📦 Funcionalidades Entregues na Fase 4
 
 - Criação do microsserviço de pagamentos
